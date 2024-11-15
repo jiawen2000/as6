@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>互動時間軸與翻翻卡</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: '微軟正黑體', sans-serif;
+        }
+
+        /* 時間軸樣式 */
+        .timeline-container {
+            position: relative;
+            min-height: 300vh;
+            padding: 50px 0;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: #333;
+        }
+
+        .timeline-item {
+            position: relative;
+            width: 50%;
+            margin: 100px 0;
+            padding: 20px;
+            opacity: 0;
+            transform: translateY(100px);
+            transition: all 0.8s ease;
+        }
+
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .timeline-item:nth-child(odd) {
+            left: 0;
+            padding-right: 50px;
+        }
+
+        .timeline-item:nth-child(even) {
+            left: 50%;
+            padding-left: 50px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            right: -6px;
+            top: 50%;
+            width: 12px;
+            height: 12px;
+            background: #333;
+            border-radius: 50%;
+        }
+
+        .timeline-item:nth-child(even)::before {
+            left: -6px;
+        }
+
+        /* 翻翻卡樣式 */
+        .flipcards-container {
+            height: 400vh;
+            position: relative;
+        }
+
+        .cards-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            position: sticky;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 20px;
+        }
+
+        .prompt {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .prompt.visible {
+            opacity: 1;
+        }
+
+        .flip-card {
+            width: 200px;
+            height: 300px;
+            perspective: 1000px;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+        }
+
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front,
+        .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .flip-card-front {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .flip-card-back {
+            background-color: #2ecc71;
+            color: white;
+            transform: rotateY(180deg);
+        }
+    </style>
+</head>
+<body>
+    <div class="timeline-container">
+        <div class="timeline-line"></div>
+        <div class="timeline-item">
+            <h3>2020年1月</h3>
+            <p>開始了一個嶄新的旅程，展開了人生的重要篇章。</p>
+        </div>
+        <div class="timeline-item">
+            <h3>2020年6月</h3>
+            <p>完成了第一個重大專案，獲得了寶貴的經驗。</p>
+        </div>
+        <div class="timeline-item">
+            <h3>2021年3月</h3>
+            <p>遇到了人生中的貴人，開啟了新的可能性。</p>
+        </div>
+        <div class="timeline-item">
+            <h3>2021年9月</h3>
+            <p>克服了重大挑戰，變得更加堅強。</p>
+        </div>
+        <div class="timeline-item">
+            <h3>2022年2月</h3>
+            <p>學習到新的技能，擴展了視野。</p>
+        </div>
+        <div class="timeline-item">
+            <h3>2022年8月</h3>
+            <p>達成了重要里程碑，感到無比欣慰。</p>
+        </div>
+        <div class="timeline-item">
+            <h3>2023年1月</h3>
+            <p>開始了新的冒險，充滿期待與希望。</p>
+        </div>
+        <div class="timeline-item">
+            <h3>2023年7月</h3>
+            <p>收穫了寶貴的友誼，感受到生命的美好。</p>
+        </div>
+        <div class="timeline-item">
+            <h3>2024年1月</h3>
+            <p>實現了長期目標，邁向更遠大的夢想。</p>
+        </div>
+        <div class="timeline-item">
+            <h3>2024年6月</h3>
+            <p>展望未來，準備迎接新的挑戰。</p>
+        </div>
+    </div>
+
+    <div class="flipcards-container">
+        <div class="prompt" style="top: 20%">選出你最喜歡的答案</div>
+        <div class="prompt" style="top: 40%">你想清楚答案了嗎？</div>
+        <div class="cards-wrapper">
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">問題 1</div>
+                    <div class="flip-card-back">答案 1</div>
+                </div>
+            </div>
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">問題 2</div>
+                    <div class="flip-card-back">答案 2</div>
+                </div>
+            </div>
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">問題 3</div>
+                    <div class="flip-card-back">答案 3</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 時間軸動畫
+        function isElementInViewport(el) {
+            const rect = el.getBoundingClientRect();
+            return (
+                rect.top >= 0 &&
+                rect.top <= (window.innerHeight || document.documentElement.clientHeight)
+            );
+        }
+
+        function handleScroll() {
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            timelineItems.forEach(item => {
+                if (isElementInViewport(item)) {
+                    item.classList.add('visible');
+                }
+            });
+
+            // 翻翻卡相關
+            const flipcardsContainer = document.querySelector('.flipcards-container');
+            const containerRect = flipcardsContainer.getBoundingClientRect();
+            const containerTop = containerRect.top;
+            const containerHeight = containerRect.height;
+            const prompts = document.querySelectorAll('.prompt');
+            const flipCards = document.querySelectorAll('.flip-card');
+
+            // 顯示提示文字
+            if (containerTop < window.innerHeight * 0.5) {
+                prompts[0].classList.add('visible');
+            }
+            if (containerTop < -window.innerHeight * 0.5) {
+                prompts[1].classList.add('visible');
+            }
+
+            // 翻轉卡片
+            if (containerTop < -window.innerHeight * 1.5) {
+                flipCards.forEach(card => {
+                    card.classList.add('flipped');
+                });
+            }
+        }
+
+        window.addEventListener('scroll', handleScroll);
+        handleScroll(); // 初始檢查
+    </script>
+</body>
+</html>
